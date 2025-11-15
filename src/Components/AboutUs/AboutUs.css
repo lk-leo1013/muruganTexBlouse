@@ -1,0 +1,133 @@
+.about-classic {
+  color: #4b2e2e;
+  padding: 28px 2vw 24px 2vw;    /* Match Collections padding */
+  margin: 24px auto 20px auto;   /* Match Collections margin */
+}
+
+.about-box {
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 2vw 24px 2vw;  
+  max-width: 1200px;
+}
+
+.about-content{
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 10px 15px;
+  align-items: center;
+}
+
+.about-box::after {
+  content: "";
+  display: block;
+  margin: 12px auto 0;
+  width: 60px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #e1917d,#eab58c 80%);
+}
+
+.about-text p {
+  line-height: 1.8;
+  font-weight: 450;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.about-text .tagline {
+  font-style: italic;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1.2rem;
+  margin: 15px 0px;
+  border-left: 4px solid #a97449;
+  padding-left: 12px;
+  padding-right: 3px;
+  color: #626457; 
+ background-image: linear-gradient(45deg,#0a6177,#469512 30%, #958415 60%,#e35e29 80%,#de1539 95%);
+ background-clip: text; 
+ -webkit-background-clip: text; 
+ -webkit-text-fill-color: transparent;
+}
+
+/* Image containers */
+.about-images {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+}
+
+.image-box {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f4f0ec, #ece2dd);
+  border: 1px solid #a97449;
+  box-shadow: 0 10px 24px rgba(80, 40, 30, 0.15);
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.image-box img {
+  height: 220px;
+  width: 300px;
+  object-fit: cover;
+  background-color: #fffefc;
+  border-radius: 10px;
+  transition: transform 0.4s ease;
+}
+
+.image-box:hover {
+  transform: scale(1.02);
+}
+
+.image-box:hover img {
+  transform: scale(1.05);
+}
+
+.caption {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-style: italic;
+  color: #5c3a2e;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-classic{
+    padding: 10px;
+  }
+  .about-box {
+    padding: 25px 15px;
+  }
+
+  .about-text .tagline{
+    font-size: 1.05rem;
+  }
+
+   .caption {
+    font-size: 0.85rem;
+  }
+
+  .about-content{
+    flex-direction: column;
+    align-items: center;
+    gap:8px;
+    padding: 5px 10px;
+  }
+  .image-box img {
+  height: 210px;
+  width: 270px;}
+
+}
+
+

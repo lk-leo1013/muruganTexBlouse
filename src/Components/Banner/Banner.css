@@ -1,0 +1,134 @@
+/* ————————————————————
+   Global Hero Wrapper
+———————————————————— */
+.hero-2col {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3.5rem;
+  padding: 5rem 6%;
+}
+
+/* ————————————————————
+   Left Section (Text)
+———————————————————— */
+.hero-2col__left {
+  flex: 1;
+  max-width: 600px;
+
+  /* Center text block */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-2col__title {
+  /* Responsive font size using clamp: min, preferred, max */
+  font-size: clamp(2.1rem, 2.5vw + 1rem, 3.1rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1.2rem;
+}
+
+.hero-2col__sub {
+  font-size: clamp(1.05rem, 0.7vw + 0.9rem, 1.25rem);
+  margin-bottom: 2rem;
+  max-width: 480px;
+}
+
+/* CTA Button */
+.hero-2col__cta {
+  display: inline-block;
+  background: #ffb89c; /* peach */
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: #6b2b1a;
+  transition: 0.25s ease-in-out;
+}
+
+.hero-2col__cta:hover {
+  background: #ffa784;
+  transform: translateY(-2px);
+}
+
+/* ————————————————————
+   Right Section (Image)
+———————————————————— */
+.hero-2col__right {
+  flex: 1;
+  text-align: right;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-2col__img {
+  width: 100%;
+  max-width: 580px;
+  object-fit: contain;
+}
+
+/* ————————————————————
+   Tablet Adjustments
+———————————————————— */
+@media (max-width: 992px) {
+  .hero-2col {
+    padding: 4rem 6%;
+    gap: 3rem;
+  }
+
+  .hero-2col__title {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+  }
+}
+
+/* ————————————————————
+   Mobile Layout
+   - Image on top
+   - Text below
+   - All centered
+———————————————————— */
+@media (max-width: 768px) {
+  .hero-2col {
+    flex-direction: column-reverse; /* puts image on top, text below */
+    align-items: center;
+    text-align: center;
+    padding: 3.5rem 7%;
+  }
+
+  .hero-2col__right {
+    text-align: center;
+  }
+
+  .hero-2col__img {
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-2col {
+    padding: 3rem 7%;
+    gap: 2.5rem;
+  }
+
+  .hero-2col__img {
+    max-width: 320px;
+  }
+
+  .hero-2col__title {
+    font-size: 1.9rem;
+  }
+
+  .hero-2col__sub {
+    font-size: 0.98rem;
+  }
+
+  .hero-2col__cta {
+    width: 100%;
+    max-width: 260px;
+    text-align: center;
+  }
+}

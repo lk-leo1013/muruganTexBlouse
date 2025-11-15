@@ -1,0 +1,81 @@
+.new-arrivals-section {
+  margin: 56px auto 0 auto;
+  max-width: 1400px;
+  padding: 0 16px 32px 16px;
+}
+
+.new-arrivals-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.new-arrivals-subtitle {
+  margin-top: -17px;
+  margin-bottom: 35px;
+}
+
+.new-arrivals-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px;
+  justify-content: center;
+}
+
+.new-arrival-card {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.new-arrival-card:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 8px 32px rgba(225,145,125,0.18);
+  z-index: 2;
+}
+
+.new-arrival-img-wrap {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(225,145,125,0.13);
+}
+
+.new-arrival-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  transition: filter 0.2s;
+}
+
+.new-arrival-card:hover .new-arrival-img {
+  filter: brightness(1.08) saturate(1.2);
+}
+
+.new-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(90deg, #e1917d 60%, #f9c46b 100%);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: bold;
+  padding: 4px 14px;
+  border-radius: 12px;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(225,145,125,0.18);
+}
+
+.new-arrival-name {
+  margin-top: 18px;
+  font-size: 1.13rem;
+  color: #232946;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.5px;
+  font-family: 'Segoe UI', sans-serif;
+}
