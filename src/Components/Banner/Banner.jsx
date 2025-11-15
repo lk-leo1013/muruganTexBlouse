@@ -9,7 +9,7 @@ const Banner = () => {
       <div className="hero-2col__left">
         <h1 className="hero-2col__title">We Weave Elegance into Every Thread</h1>
         <p className="hero-2col__sub">Discover blouse fabrics crafted with tradition and grace</p>
-        <a className="hero-2col__cta" href="/blouses/all" aria-label="View all blouses">View all blouses</a>
+        <a className="hero-2col__cta" href="/muruganTexBlouse/blouses/all" aria-label="View all blouses">View all blouses</a>
       </div>
 
       <div className="hero-2col__right" aria-hidden="false">

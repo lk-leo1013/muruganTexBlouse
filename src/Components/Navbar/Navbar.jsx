@@ -18,12 +18,12 @@ const Navbar = () => {
       <ul className="nav-side left desktop-only">
         <li><Link to="#about" className="nav-link">Style Buzz</Link></li>
         <li><Link to="#about" className="nav-link">New Arrivals</Link></li>
-        <li><Link to="/blouses/all" className="nav-link">Shop All</Link></li>
+        <li><Link to="/muruganTexBlouse/blouses/all" className="nav-link">Shop All</Link></li>
 
       </ul>
 
       <div className="navbar-logo">
-        <Link to="/">
+        <Link to="/muruganTexBlouse">
           <img src={logo} alt="Murugan Tex" />
         </Link>
       </div>
