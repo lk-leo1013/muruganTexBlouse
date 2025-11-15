@@ -16,8 +16,8 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <ul className="nav-side left desktop-only">
-        <li><Link to="#about" className="nav-link">Style Buzz</Link></li>
-        <li><Link to="#about" className="nav-link">New Arrivals</Link></li>
+        <li><a href="#collections" className="nav-link">Style Buzz</a></li>
+        <li><a href="#new-arrivals" className="nav-link">New Arrivals</a></li>
         <li><Link to="/blouses/all" className="nav-link">Shop All</Link></li>
 
       </ul>
@@ -43,7 +43,7 @@ const Navbar = () => {
   />
 </div>
 </li>
-        <li><Link to="/#contact" className="nav-link"><Mail/><span>Contact Us</span></Link></li>
+        <li><a href="#contact-us" className="nav-link"><Mail/><span>Contact Us</span></a></li>
       </ul>
 
       <div className="hamburger" onClick={toggleMenu} role="button" aria-label="Toggle menu">
@@ -54,10 +54,10 @@ const Navbar = () => {
 
       {isMobileMenuOpen && (
         <div className="mobile-menu">
-          <Link to="/" onClick={toggleMenu}>Home</Link>
-          <Link to="/#about" onClick={toggleMenu}>About Us</Link>
-          <Link to="/#collections" onClick={toggleMenu}>Collections</Link>
-          <Link to="/#contact" onClick={toggleMenu}>Contact Us</Link>
+        <a href="#collections" onClick={toggleMenu}>Style Buzz</a>
+        <a href="/#new-arrivals" onClick={toggleMenu}>New Arrivals</a>
+        <Link to="/blouses/all" onClick={toggleMenu}>Shop All</Link>
+        <a href="/#contact-us" onClick={toggleMenu}><Mail/><span>Contact Us</span></a>
         </div>
       )}
     </nav>

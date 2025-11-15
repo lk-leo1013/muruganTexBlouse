@@ -12,7 +12,7 @@ import { SearchProvider } from './contexts/SearchContext';
 
 const App = () => (
     <SearchProvider>
-      <Router>
+      <Router basename="/muruganTexBlouse">
         <Navbar />
         <Routes>
           <Route path="/" element={

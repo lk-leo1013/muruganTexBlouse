@@ -12,7 +12,7 @@ const newArrivals = [
 ];
 
 const NewArrivals = () => (
-    <section className="new-arrivals-section">
+    <section id="new-arrivals" className="new-arrivals-section">
         <div className="new-arrivals-header">
             <h2 className="new-arrivals-title">Fresh Finds</h2>
             <h6 className="new-arrivals-subtitle">
