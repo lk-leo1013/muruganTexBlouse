@@ -15,7 +15,7 @@ const App = () => (
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/muruganTexBlouse" element={
+          <Route path="/" element={
             <>
             <Banner/>
               <Collections />
@@ -25,7 +25,7 @@ const App = () => (
               <ContactUs />
             </>
           } />
-          <Route path="/muruganTexBlouse/blouses/all" element={<ViewAllBlouses />} />
+          <Route path="/blouses/all" element={<ViewAllBlouses />} />
         </Routes>
       </Router>
     </SearchProvider>

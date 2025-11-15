@@ -33,7 +33,7 @@ const BlouseCollection = () => (
     </div>
     <div style={{ textAlign: 'center', marginTop: 20 }}>
       <Link
-        to="/muruganTexBlouse/blouses/all"
+        to="/blouses/all"
         className="view-all-btn"
         style={{
           background: '#e1917d',
