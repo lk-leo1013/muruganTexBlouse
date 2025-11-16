@@ -18,7 +18,7 @@ const Navbar = () => {
       <ul className="nav-side left desktop-only">
         <li><a href="#collections" className="nav-link">Style Buzz</a></li>
         <li><a href="#new-arrivals" className="nav-link">New Arrivals</a></li>
-        <li><Link to="/blouses/all" className="nav-link">Shop All</Link></li>
+        <li><a href="/muruganTexBlouse/blouses/all" className="nav-link">Shop All</a></li>
 
       </ul>
 
@@ -39,9 +39,9 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="mobile-menu">
           <li><a href="#collections" className="nav-link" onClick={toggleMenu}>Style Buzz</a></li>
-          <li><a href="/#new-arrivals" className="nav-link" onClick={toggleMenu}>New Arrivals</a></li>
-          <li><Link to="/blouses/all" className="nav-link" onClick={toggleMenu}>Shop All</Link></li>
-          <li><a href="/#contact-us" className="nav-link" onClick={toggleMenu}><Mail />Contact Us</a></li>
+          <li><a href="#new-arrivals" className="nav-link" onClick={toggleMenu}>New Arrivals</a></li>
+          <li><a href="/muruganTexBlouse/blouses/all" className="nav-link" onClick={toggleMenu}>Shop All</a></li>
+          <li><a href="#contact-us" className="nav-link" onClick={toggleMenu}><Mail />Contact Us</a></li>
         </div>
       )}
 
