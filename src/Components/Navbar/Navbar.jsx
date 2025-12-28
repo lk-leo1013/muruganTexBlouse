@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../../assets/logo1.png';
 import { SearchContext } from '../../contexts/SearchContext';
@@ -13,12 +13,19 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const goToSearchPage = () => {
+    if (location.pathname !== '/blouses/all') navigate('/blouses/all');
+  };
+
   return (
     <nav className="navbar">
       <ul className="nav-side left desktop-only">
-        <li><a href="#collections" className="nav-link">Style Buzz</a></li>
-        <li><a href="#new-arrivals" className="nav-link">New Arrivals</a></li>
-        <li><a href="/muruganTexBlouse/blouses/all" className="nav-link">Shop All</a></li>
+        <li><Link to="/#collections" className="nav-link">Style Buzz</Link></li>
+        <li><Link to="/#new-arrivals" className="nav-link">New Arrivals</Link></li>
+        <li><Link to="/blouses/all" className="nav-link">Shop All</Link></li>
 
       </ul>
 
@@ -34,14 +41,14 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="mobile-search"><Search /></div>
+      <div className="mobile-search" role="button" aria-label="Open search" onClick={goToSearchPage}><Search /></div>
 
       {isMobileMenuOpen && (
         <div className="mobile-menu">
-          <li><a href="#collections" className="nav-link" onClick={toggleMenu}>Style Buzz</a></li>
-          <li><a href="#new-arrivals" className="nav-link" onClick={toggleMenu}>New Arrivals</a></li>
-          <li><a href="/muruganTexBlouse/blouses/all" className="nav-link" onClick={toggleMenu}>Shop All</a></li>
-          <li><a href="#contact-us" className="nav-link" onClick={toggleMenu}><Mail />Contact Us</a></li>
+          <li><Link to="/#collections" className="nav-link" onClick={toggleMenu}>Style Buzz</Link></li>
+          <li><Link to="/#new-arrivals" className="nav-link" onClick={toggleMenu}>New Arrivals</Link></li>
+          <li><Link to="/blouses/all" className="nav-link" onClick={toggleMenu}>Shop All</Link></li>
+          <li><Link to="/#contact-us" className="nav-link" onClick={toggleMenu}><Mail />Contact Us</Link></li>
         </div>
       )}
 
@@ -56,12 +63,13 @@ const Navbar = () => {
               placeholder="Search blouses..."
               value={query || ''}
               onChange={(e) => setQuery(e.target.value)}
+              onFocus={goToSearchPage}
               aria-label="Search site"
             />
           </div>
           <div className="tab-search"><Search /></div>
         </li>
-        <li><a href="#contact-us" className="nav-link"><Mail />Contact Us</a></li>
+        <li><Link to="/#contact-us" className="nav-link"><Mail />Contact Us</Link></li>
       </ul>
     </nav>
   );
