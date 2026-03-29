@@ -1,160 +1,144 @@
-
-.collections-block,
-.collections-grid {
-  max-width: 100vw;
+/* ── Collections / Style Buzz ── */
+.collections-section {
+  padding: 72px 6% 64px;
+  background: var(--bg, #fdf9f6);
 }
 
-/* Section styles */
-.collections-block {
-  background: none;
-  padding: 18px 0 8px 0;
-  margin: 10px 0;
-  width: 100vw;
-  max-width: 100vw;
+.collections-header {
+  text-align: center;
+  margin-bottom: 40px;
 }
-.collection-oneliner {
-  margin-top: -17px;
-  margin-bottom: 35px;
+.collections-header h2 {
+  font-family: var(--font-heading, 'Bentham', serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--navy, #1a1a2e);
+  margin: 8px 0 0;
+}
+.collections-header h6 {
+  font-size: 0.95rem;
+  color: var(--text-muted, #6b6b7b);
+  font-weight: 400;
+  margin: 10px 0 0;
 }
 
+/* 3-column masonry-style grid */
 .collections-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
-  grid-auto-rows: 220px; 
-  gap: 30px;
-  max-width: 1400px; 
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 260px;
+  gap: 20px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 15px 2vw;
-  justify-items: stretch;
-  align-items: stretch;
   grid-auto-flow: dense;
 }
 
-/* Remove card box styles */
-.collection-card {
-  background: none;
-  border: none;
-  box-shadow: none;
+/* 1st and 4th cards span 2 rows (tall accent cards) */
+.collections-grid .coll-card:nth-child(1),
+.collections-grid .coll-card:nth-child(4) {
+  grid-row: span 2;
+}
+
+.coll-card {
   display: block;
   text-decoration: none;
-  transition: none;
-  padding: 0;
   position: relative;
-  cursor: pointer;
-  color: inherit;
-  width: 100%;
-  max-width: 260px;
-}
-
-/* Default image container fills one cell, now larger */
-.img-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 22px; /* was 18px */
+  border-radius: 18px;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.coll-img-wrap {
+  width: 100%;
+  height: 100%;
   position: relative;
-  transition: box-shadow 0.2s;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  overflow: hidden;
 }
 
-/* Make 1st image tall (spans 2 rows) */
-.collections-grid .collection-card:nth-child(1) {
-  grid-row: span 2;
-  grid-column: span 1;
-}
-.collections-grid .collection-card:nth-child(1) .img-container {
-  height: 100%;
-  min-height: 100%;
-}
-
-.collections-grid .collection-card:nth-child(3){
-  grid-row: span 2;
-  grid-column: span 1;
-}
-
-.collections-grid .collection-card:nth-child(3) .img-container {
-  height: 100%;
-  min-height: 100%;
-}
-
-/* The rest fill one cell each */
-.collections-grid .collection-card {
-  min-width: 0;
-  min-height: 0;
-}
-
-
-/* Image styles with zoom on hover */
-.img-container img {
+.coll-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s cubic-bezier(.4,1.7,.7,1.01);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.coll-card:hover .coll-img { transform: scale(1.07); }
 
-.collection-card:hover .img-container img,
-.collection-card:focus .img-container img {
-  transform: scale(1.08);
-}
-
-/* Title at the bottom inside the image, always visible, no background, no shadow */
-.collection-title {
+/* Gradient overlay */
+.coll-overlay {
   position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 35%,
+    rgba(26, 26, 46, 0.74) 100%
+  );
+  pointer-events: none;
+}
+
+/* Text overlay */
+.coll-info {
+  position: absolute;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  padding: 5px 0;
-  color: #fff;
-  font-family: 'Bentham', serif;
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-align: center;
-  z-index: 2;
-  margin: 0;
+  padding: 18px 18px 20px;
+  z-index: 3;
   pointer-events: none;
-  text-transform: none;
-  -webkit-text-stroke: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
-/* Responsive adjustments */
+.coll-title {
+  font-family: var(--font-heading, 'Bentham', serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.5px;
+  text-align: center;
+  transition: transform 0.28s;
+}
+.coll-card:hover .coll-title {
+  transform: translateY(-16px);
+}
+
+.coll-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.28s, transform 0.28s;
+}
+.coll-card:hover .coll-desc {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ── */
 @media (max-width: 900px) {
   .collections-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-auto-rows: 180px;
-    gap: 15px;
-    padding: 0 2vw;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 220px;
   }
-  .img-container {
-    border-radius: 16px;
+  .collections-grid .coll-card:nth-child(4) {
+    grid-row: span 1;
   }
-  .collections-block{
-    padding: 5px;
-  }
-  .collection-oneliner {
-    padding: 0px 10px;
-}
-.collection-title{
-  font-size: 1rem;
-
-}
 }
 
-@media (max-width: 600px) {
+@media (max-width: 580px) {
+  .collections-section { padding: 48px 4% 40px; }
   .collections-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    grid-auto-rows: 120px;
-    gap: 10px;
-    padding: 0 1vw;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+    gap: 12px;
   }
-  .img-container {
-    border-radius: 10px;
+  .collections-grid .coll-card:nth-child(1),
+  .collections-grid .coll-card:nth-child(4) {
+    grid-row: span 1;
   }
-  .collection-title {
-    font-size: 0.9rem;
-    padding: 5px 0px;
-  }
+  .coll-title { font-size: 0.9rem; }
 }

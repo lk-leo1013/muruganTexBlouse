@@ -1,36 +1,51 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import './NewArrivals.css';
-import blouse1 from '../../assets/blouse1.jpg';
-import blouse2 from '../../assets/blouse2.jpg';
-import blouse3 from '../../assets/blouse3.jpg';
+import blouse1    from '../../assets/blouse1.jpg';
+import blouse2    from '../../assets/blouse2.jpg';
+import blouse3    from '../../assets/blouse3.jpg';
+import georgette  from '../../assets/georgette.jpg';
+import partywear  from '../../assets/partywear.avif';
+import chikankari from '../../assets/chikankari.webp';
 
-const newArrivals = [
-  { name: 'Sunset Shimmer', image: blouse1 },
-  { name: 'Mint Muse', image: blouse2 },
-  { name: 'Azure Allure', image: blouse3 },
-  // Add more as needed
+const NEW_ARRIVALS = [
+  { name: 'Georgette Grace',    fabric: 'Georgette',     image: blouse1    },
+  { name: 'Emerald Elegance',   fabric: 'Pure Silk',     image: blouse2    },
+  { name: 'Silken Serenity',    fabric: 'Satin Silk',    image: partywear  },
+  { name: 'Georgette Radiance', fabric: 'Georgette',     image: georgette  },
+  { name: 'Chikankari Charm',   fabric: 'Georgette',     image: chikankari },
+  { name: 'Azure Allure',       fabric: 'Kanjivaram',    image: blouse3    },
 ];
 
 const NewArrivals = () => (
-    <section id="new-arrivals" className="new-arrivals-section">
-        <div className="new-arrivals-header">
-            <h2 className="new-arrivals-title">Fresh Finds</h2>
-            <h6 className="new-arrivals-subtitle">
-                Unwrap Your Style: Handpicked Looks Just Landed!
-            </h6>
-        </div>
-        <div className="new-arrivals-grid">
-            {newArrivals.map((item, idx) => (
-                <div className="new-arrival-card" key={idx}>
-                    <div className="new-arrival-img-wrap">
-                        <img src={item.image} alt={item.name} className="new-arrival-img" />
-                        <span className="new-badge">NEW</span>
-                    </div>
-                    <div className="new-arrival-name">{item.name}</div>
-                </div>
-            ))}
-        </div>
-    </section>
+  <section id="new-arrivals" className="na-section">
+    <div className="na-header">
+      <span className="section-eyebrow">Just Arrived</span>
+      <h2>Fresh Finds</h2>
+      <div className="section-divider" />
+      <h6>Handpicked looks, just landed — unwrap your next favourite blouse.</h6>
+    </div>
+
+    <div className="na-scroll-wrap">
+      <div className="na-row">
+        {NEW_ARRIVALS.map((item, i) => (
+          <Link key={i} to="/blouses/all" className="na-card" aria-label={item.name}>
+            <div className="na-img-wrap">
+              <img src={item.image} alt={item.name} className="na-img" loading="lazy" />
+              <span className="na-badge">NEW</span>
+            </div>
+            <div className="na-info">
+              <p className="na-name">{item.name}</p>
+              <p className="na-fabric">{item.fabric}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+
+    <div className="na-cta">
+      <Link to="/blouses/all" className="btn-outline">View All New Arrivals</Link>
+    </div>
+  </section>
 );
 
 export default NewArrivals;
