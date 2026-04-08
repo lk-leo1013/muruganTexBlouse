@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
+import { fetchBlouses, deleteBlouse } from '../../lib/db';
 import { useAuth } from '../../contexts/AuthContext';
 import BlouseForm from './BlouseForm';
 import './AdminPanel.css';
@@ -13,22 +13,19 @@ const AdminPanel = () => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
-  const fetchBlouses = async () => {
+  const loadBlouses = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('blouses')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (!error) setBlouses(data || []);
+    const { data } = await fetchBlouses();
+    setBlouses(data || []);
     setLoading(false);
   };
 
-  useEffect(() => { fetchBlouses(); }, []);
+  useEffect(() => { loadBlouses(); }, []);
 
   const handleDelete = async (id, name) => {
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
-    await supabase.from('blouses').delete().eq('id', id);
-    fetchBlouses();
+    await deleteBlouse(id);
+    loadBlouses();
   };
 
   const handleEdit = (blouse) => {
@@ -44,7 +41,7 @@ const AdminPanel = () => {
   const handleFormClose = () => {
     setShowForm(false);
     setEditBlouse(null);
-    fetchBlouses();
+    loadBlouses();
   };
 
   const handleLogout = async () => {

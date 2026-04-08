@@ -1,20 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './NewArrivals.css';
-import { supabase } from '../../lib/supabase';
+import { fetchBlouses } from '../../lib/db';
 
 const NewArrivals = () => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    supabase
-      .from('blouses')
-      .select('id, name, fabric, colors')
-      .order('created_at', { ascending: false })
-      .limit(6)
-      .then(({ data }) => {
-        if (data) setItems(data);
-      });
+    fetchBlouses({ limit: 6 }).then(({ data }) => {
+      if (data) setItems(data);
+    });
   }, []);
 
   if (items.length === 0) return null;

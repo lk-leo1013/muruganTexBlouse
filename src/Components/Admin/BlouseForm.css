@@ -347,3 +347,25 @@
   .bf-overlay { padding: 0; align-items: flex-end; }
   .bf-modal { border-radius: 12px 12px 0 0; max-height: 95vh; }
 }
+
+/* URL input row */
+.bf-url-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.bf-url-add-btn {
+  padding: 0.6rem 1rem;
+  background: #8b1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.bf-url-add-btn:hover { background: #6e1515; }

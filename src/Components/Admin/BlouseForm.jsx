@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { insertBlouse, updateBlouse } from '../../lib/db';
 import './BlouseForm.css';
 
 const FABRIC_OPTIONS = [
@@ -10,13 +10,7 @@ const FABRIC_OPTIONS = [
 
 const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL'];
 
-const defaultColor = () => ({
-  name: '',
-  hex: '#8b1a1a',
-  images: [],
-  previewUrls: [],
-  uploading: false,
-});
+const defaultColor = () => ({ name: '', hex: '#8b1a1a', images: [], urlInput: '' });
 
 const defaultForm = {
   name: '',
@@ -48,8 +42,7 @@ const BlouseForm = ({ blouse, onClose }) => {
         name: c.name,
         hex: c.hex,
         images: c.images || [],
-        previewUrls: c.images || [],
-        uploading: false,
+        urlInput: '',
       })),
     };
   });
@@ -62,9 +55,7 @@ const BlouseForm = ({ blouse, onClose }) => {
   const toggleSize = (sz) =>
     setForm(f => ({
       ...f,
-      sizes: f.sizes.includes(sz)
-        ? f.sizes.filter(s => s !== sz)
-        : [...f.sizes, sz],
+      sizes: f.sizes.includes(sz) ? f.sizes.filter(s => s !== sz) : [...f.sizes, sz],
     }));
 
   const addColor = () =>
@@ -76,35 +67,16 @@ const BlouseForm = ({ blouse, onClose }) => {
   const setColorField = (idx, key, val) =>
     setForm(f => ({
       ...f,
-      colors: f.colors.map((c, i) => (i === idx ? { ...c, [key]: val } : c)),
+      colors: f.colors.map((c, i) => i === idx ? { ...c, [key]: val } : c),
     }));
 
-  const uploadImage = async (idx, file) => {
-    setColorField(idx, 'uploading', true);
-    const ext = file.name.split('.').pop();
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error: uploadErr } = await supabase.storage
-      .from('blouse-images')
-      .upload(path, file);
-    if (uploadErr) {
-      setError('Image upload failed: ' + uploadErr.message);
-      setColorField(idx, 'uploading', false);
-      return;
-    }
-    const { data: { publicUrl } } = supabase.storage
-      .from('blouse-images')
-      .getPublicUrl(path);
+  const addImageUrl = (idx) => {
+    const url = form.colors[idx].urlInput.trim();
+    if (!url) return;
     setForm(f => ({
       ...f,
       colors: f.colors.map((c, i) =>
-        i === idx
-          ? {
-              ...c,
-              images: [...c.images, publicUrl],
-              previewUrls: [...c.previewUrls, publicUrl],
-              uploading: false,
-            }
-          : c
+        i === idx ? { ...c, images: [...c.images, url], urlInput: '' } : c
       ),
     }));
   };
@@ -113,13 +85,7 @@ const BlouseForm = ({ blouse, onClose }) => {
     setForm(f => ({
       ...f,
       colors: f.colors.map((c, i) =>
-        i === colorIdx
-          ? {
-              ...c,
-              images: c.images.filter((_, j) => j !== imgIdx),
-              previewUrls: c.previewUrls.filter((_, j) => j !== imgIdx),
-            }
-          : c
+        i === colorIdx ? { ...c, images: c.images.filter((_, j) => j !== imgIdx) } : c
       ),
     }));
 
@@ -155,15 +121,14 @@ const BlouseForm = ({ blouse, onClose }) => {
         hex: c.hex,
         images: c.images,
       })),
-      updated_at: new Date().toISOString(),
     };
 
     const { error: saveErr } = isEdit
-      ? await supabase.from('blouses').update(payload).eq('id', blouse.id)
-      : await supabase.from('blouses').insert(payload);
+      ? await updateBlouse(blouse.id, payload)
+      : await insertBlouse(payload);
 
     setSaving(false);
-    if (saveErr) { setError(saveErr.message); return; }
+    if (saveErr) { setError(saveErr); return; }
     onClose();
   };
 
@@ -178,45 +143,30 @@ const BlouseForm = ({ blouse, onClose }) => {
         </div>
 
         <form className="bf-body" onSubmit={handleSave}>
-          {/* Row 1: Name + Fabric */}
           <div className="bf-row two">
             <div className="bf-group">
               <label className="bf-label">Blouse Name *</label>
-              <input
-                className="bf-input"
-                value={form.name}
+              <input className="bf-input" value={form.name}
                 onChange={e => setField('name', e.target.value)}
-                placeholder="e.g. Georgette Grace"
-                required
-              />
+                placeholder="e.g. Georgette Grace" required />
             </div>
             <div className="bf-group">
               <label className="bf-label">Fabric *</label>
-              <select
-                className="bf-input"
-                value={form.fabric}
-                onChange={e => setField('fabric', e.target.value)}
-                required
-              >
+              <select className="bf-input" value={form.fabric}
+                onChange={e => setField('fabric', e.target.value)} required>
                 <option value="">Select fabric…</option>
                 {FABRIC_OPTIONS.map(f => <option key={f} value={f}>{f}</option>)}
               </select>
             </div>
           </div>
 
-          {/* Description */}
           <div className="bf-group">
             <label className="bf-label">Description</label>
-            <textarea
-              className="bf-input bf-textarea"
-              value={form.description}
+            <textarea className="bf-input bf-textarea" value={form.description}
               onChange={e => setField('description', e.target.value)}
-              rows={3}
-              placeholder="Describe the blouse style, embroidery, neckline, occasions, etc."
-            />
+              rows={3} placeholder="Describe the blouse…" />
           </div>
 
-          {/* Row 2: Badge + Rating + Reviews */}
           <div className="bf-row three">
             <div className="bf-group">
               <label className="bf-label">Badge</label>
@@ -228,40 +178,24 @@ const BlouseForm = ({ blouse, onClose }) => {
             </div>
             <div className="bf-group">
               <label className="bf-label">Rating (0–5)</label>
-              <input
-                className="bf-input"
-                type="number" min="0" max="5" step="0.1"
-                value={form.rating}
-                onChange={e => setField('rating', e.target.value)}
-              />
+              <input className="bf-input" type="number" min="0" max="5" step="0.1"
+                value={form.rating} onChange={e => setField('rating', e.target.value)} />
             </div>
             <div className="bf-group">
               <label className="bf-label">Review Count</label>
-              <input
-                className="bf-input"
-                type="number" min="0"
-                value={form.reviews}
-                onChange={e => setField('reviews', e.target.value)}
-              />
+              <input className="bf-input" type="number" min="0"
+                value={form.reviews} onChange={e => setField('reviews', e.target.value)} />
             </div>
           </div>
 
-          {/* Row 3: Sizes + Wash Care */}
           <div className="bf-row two">
             <div className="bf-group">
               <label className="bf-label">Available Sizes</label>
               <div className="bf-sizes">
                 {SIZE_OPTIONS.map(sz => (
-                  <label
-                    key={sz}
-                    className={`bf-size-pill ${form.sizes.includes(sz) ? 'active' : ''}`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={form.sizes.includes(sz)}
-                      onChange={() => toggleSize(sz)}
-                      hidden
-                    />
+                  <label key={sz} className={`bf-size-pill ${form.sizes.includes(sz) ? 'active' : ''}`}>
+                    <input type="checkbox" checked={form.sizes.includes(sz)}
+                      onChange={() => toggleSize(sz)} hidden />
                     {sz}
                   </label>
                 ))}
@@ -269,19 +203,16 @@ const BlouseForm = ({ blouse, onClose }) => {
             </div>
             <div className="bf-group">
               <label className="bf-label">Wash Care</label>
-              <input
-                className="bf-input"
-                value={form.wash_care}
+              <input className="bf-input" value={form.wash_care}
                 onChange={e => setField('wash_care', e.target.value)}
-                placeholder="e.g. Dry clean only"
-              />
+                placeholder="e.g. Dry clean only" />
             </div>
           </div>
 
           {/* Colours */}
           <div className="bf-colors-section">
             <div className="bf-colors-hdr">
-              <span className="bf-label">Colours & Images</span>
+              <span className="bf-label">Colours &amp; Images</span>
               <button type="button" className="bf-add-color-btn" onClick={addColor}>
                 + Add Colour
               </button>
@@ -291,84 +222,67 @@ const BlouseForm = ({ blouse, onClose }) => {
               <div className="bf-color-block" key={idx}>
                 <div className="bf-color-block-hdr">
                   <span className="bf-color-num">
-                    <span
-                      className="bf-color-preview"
-                      style={{ background: color.hex }}
-                    />
-                    Colour {idx + 1}
-                    {color.name && <strong> — {color.name}</strong>}
+                    <span className="bf-color-preview" style={{ background: color.hex }} />
+                    Colour {idx + 1}{color.name && <strong> — {color.name}</strong>}
                   </span>
                   {form.colors.length > 1 && (
-                    <button
-                      type="button"
-                      className="bf-remove-color"
-                      onClick={() => removeColor(idx)}
-                    >
+                    <button type="button" className="bf-remove-color" onClick={() => removeColor(idx)}>
                       Remove
                     </button>
                   )}
                 </div>
+
                 <div className="bf-row two">
                   <div className="bf-group">
                     <label className="bf-label">Colour Name</label>
-                    <input
-                      className="bf-input"
-                      value={color.name}
+                    <input className="bf-input" value={color.name}
                       onChange={e => setColorField(idx, 'name', e.target.value)}
-                      placeholder="e.g. Red, Maroon, Navy Blue"
-                    />
+                      placeholder="e.g. Red, Navy, Ivory" />
                   </div>
                   <div className="bf-group">
                     <label className="bf-label">Colour Hex</label>
                     <div className="bf-hex-row">
-                      <input
-                        type="color"
-                        value={color.hex}
+                      <input type="color" value={color.hex}
                         onChange={e => setColorField(idx, 'hex', e.target.value)}
-                        className="bf-color-picker"
-                      />
-                      <input
-                        className="bf-input bf-hex-text"
-                        value={color.hex}
+                        className="bf-color-picker" />
+                      <input className="bf-input bf-hex-text" value={color.hex}
                         onChange={e => setColorField(idx, 'hex', e.target.value)}
-                        placeholder="#000000"
-                      />
+                        placeholder="#000000" />
                     </div>
                   </div>
                 </div>
 
                 <div className="bf-group">
                   <label className="bf-label">
-                    Images
-                    <span className="bf-label-hint"> (upload one or more photos for this colour)</span>
+                    Image URLs
+                    <span className="bf-label-hint"> (paste a URL and click Add)</span>
                   </label>
-                  <div className="bf-images-row">
-                    {color.previewUrls.map((url, imgIdx) => (
-                      <div key={imgIdx} className="bf-img-thumb">
-                        <img src={url} alt="" />
-                        <button
-                          type="button"
-                          className="bf-img-remove"
-                          onClick={() => removeImage(idx, imgIdx)}
-                          aria-label="Remove image"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
-                    <label className={`bf-upload-tile ${color.uploading ? 'uploading' : ''}`}>
-                      {color.uploading
-                        ? <><div className="bf-upload-spinner" />Uploading…</>
-                        : <><span className="bf-upload-icon">↑</span>Upload</>
-                      }
-                      <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        disabled={color.uploading}
-                        onChange={e => e.target.files[0] && uploadImage(idx, e.target.files[0])}
-                      />
-                    </label>
+
+                  {/* Existing images */}
+                  {color.images.length > 0 && (
+                    <div className="bf-images-row">
+                      {color.images.map((url, imgIdx) => (
+                        <div key={imgIdx} className="bf-img-thumb">
+                          <img src={url} alt="" onError={e => { e.target.style.display = 'none'; }} />
+                          <button type="button" className="bf-img-remove"
+                            onClick={() => removeImage(idx, imgIdx)} aria-label="Remove">✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* URL input */}
+                  <div className="bf-url-row">
+                    <input
+                      className="bf-input"
+                      value={color.urlInput}
+                      onChange={e => setColorField(idx, 'urlInput', e.target.value)}
+                      placeholder="https://example.com/image.jpg"
+                      onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addImageUrl(idx))}
+                    />
+                    <button type="button" className="bf-url-add-btn" onClick={() => addImageUrl(idx)}>
+                      Add
+                    </button>
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import { useContext, useMemo, useState, useEffect } from 'react';
 import './ViewAllBlouses.css';
 import { SearchContext } from '../../contexts/SearchContext';
-import { supabase } from '../../lib/supabase';
+import { fetchBlouses } from '../../lib/db';
 
 // Transform a raw Supabase row into the shape the UI expects
 function transformBlouse(row) {
@@ -62,12 +62,9 @@ const ViewAllBlouses = () => {
   const [modalImgIdx, setModalImgIdx] = useState(0);
 
   useEffect(() => {
-    const fetchBlouses = async () => {
+    const loadBlouses = async () => {
       setDbLoading(true);
-      const { data, error } = await supabase
-        .from('blouses')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data, error } = await fetchBlouses();
       if (error) {
         setDbError('Failed to load blouses. Please try again.');
       } else {
@@ -75,7 +72,7 @@ const ViewAllBlouses = () => {
       }
       setDbLoading(false);
     };
-    fetchBlouses();
+    loadBlouses();
   }, []);
 
   // Build colorMap dynamically from fetched blouses

@@ -1,17 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './BlouseCollection.css';
-import { supabase } from '../../lib/supabase';
+import { fetchBlouses } from '../../lib/db';
 
 const BlouseCollection = () => {
   const [featured, setFeatured] = useState([]);
 
   useEffect(() => {
-    supabase
-      .from('blouses')
-      .select('id, name, fabric, badge, colors')
-      .order('reviews', { ascending: false })
-      .limit(8)
+    fetchBlouses({ orderBy: 'reviews', ascending: false, limit: 8 })
       .then(({ data }) => {
         if (data) setFeatured(data);
       });
