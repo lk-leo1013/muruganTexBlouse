@@ -6,7 +6,7 @@ import NewArrivals from './Components/NewArrivals/NewArrivals';
 import BlouseCollection from './Components/BlouseCollection/BlouseCollection';
 import AboutUs from './Components/AboutUs/AboutUs';
 import Banner from './Components/Banner/Banner';
-import ContactUs from './Components/contactUs/ContactUs';
+import ContactUs from './Components/ContactUs/ContactUs';
 import ViewAllBlouses from './Components/AllBlouseCollections/ViewAllBlouses';
 import AdminLogin from './Components/Admin/AdminLogin';
 import AdminPanel from './Components/Admin/AdminPanel';
