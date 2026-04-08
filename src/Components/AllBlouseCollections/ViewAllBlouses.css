@@ -741,3 +741,26 @@
   -webkit-tap-highlight-color: transparent;
 }
 .product-grid, .pd-thumbnails { -webkit-overflow-scrolling: touch; }
+
+/* Multi-image gallery strip */
+.pd-gallery-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.pd-gallery-dot {
+  width: 48px;
+  height: 60px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  background: #f0ebe4;
+  transition: border-color 0.15s;
+}
+
+.pd-gallery-dot img { width: 100%; height: 100%; object-fit: cover; }
+.pd-gallery-dot.active { border-color: #8b1a1a; }

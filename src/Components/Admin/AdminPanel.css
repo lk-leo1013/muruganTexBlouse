@@ -1,0 +1,279 @@
+.ap-root {
+  min-height: 100vh;
+  background: #f5f5f0;
+  font-family: inherit;
+}
+
+/* Header */
+.ap-header {
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ap-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ap-brand {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b1a1a;
+}
+
+.ap-divider {
+  color: #ddd;
+  font-weight: 300;
+}
+
+.ap-title {
+  font-size: 0.9rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.ap-header-right {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.ap-btn-add {
+  padding: 0.5rem 1.1rem;
+  background: #8b1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ap-btn-add:hover { background: #6e1515; }
+
+.ap-btn-logout {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: #666;
+  border: 1.5px solid #ddd;
+  border-radius: 7px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ap-btn-logout:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+/* Main */
+.ap-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.ap-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.75rem;
+}
+
+.ap-section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.2rem;
+}
+
+.ap-section-sub {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0;
+}
+
+.ap-count {
+  font-size: 0.85rem;
+  color: #888;
+  background: #efefef;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+/* Loading */
+.ap-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.ap-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e8e8e8;
+  border-top-color: #8b1a1a;
+  border-radius: 50%;
+  animation: ap-spin 0.7s linear infinite;
+}
+
+@keyframes ap-spin { to { transform: rotate(360deg); } }
+
+/* Empty */
+.ap-empty {
+  text-align: center;
+  padding: 4rem 0;
+  color: #666;
+}
+
+.ap-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.ap-empty p { margin: 0 0 0.4rem; font-size: 1rem; font-weight: 600; }
+.ap-empty-sub { font-size: 0.875rem; color: #aaa; }
+
+/* Grid */
+.ap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Card */
+.ap-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.ap-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.ap-card-img-wrap {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: #f0ebe4;
+}
+
+.ap-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ap-card-no-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #bbb;
+}
+
+.ap-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 7px;
+  border-radius: 4px;
+}
+
+.ap-badge-new { background: #2ecc71; color: #fff; }
+.ap-badge-bs { background: #8b1a1a; color: #fff; }
+
+.ap-card-body {
+  padding: 0.85rem 0.85rem 0.5rem;
+  flex: 1;
+}
+
+.ap-card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.2rem;
+}
+
+.ap-card-fabric {
+  font-size: 0.78rem;
+  color: #999;
+  margin: 0 0 0.6rem;
+}
+
+.ap-card-colors {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ap-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1.5px solid rgba(0,0,0,0.1);
+}
+
+.ap-color-count {
+  font-size: 0.72rem;
+  color: #bbb;
+  margin-left: 2px;
+}
+
+.ap-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #f0f0f0;
+}
+
+.ap-btn-edit,
+.ap-btn-del {
+  padding: 0.6rem;
+  border: none;
+  background: transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ap-btn-edit { color: #8b1a1a; border-right: 1px solid #f0f0f0; }
+.ap-btn-edit:hover { background: #fdf5f5; }
+
+.ap-btn-del { color: #e74c3c; }
+.ap-btn-del:hover { background: #fdf5f5; }
+
+@media (max-width: 600px) {
+  .ap-header { padding: 0 1rem; }
+  .ap-main { padding: 1.25rem 1rem; }
+  .ap-title { display: none; }
+  .ap-divider { display: none; }
+}
