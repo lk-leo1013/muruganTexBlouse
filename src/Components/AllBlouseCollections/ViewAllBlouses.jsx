@@ -107,11 +107,6 @@ const ViewAllBlouses = () => {
     return counts;
   }, [blouses]);
 
-  const colorCounts = useMemo(() => {
-    const counts = {};
-    blouses.forEach(b => b.colors.forEach(c => { counts[c] = (counts[c] || 0) + 1; }));
-    return counts;
-  }, [blouses]);
 
   const filtered = useMemo(() => {
     const q = (query || '').trim().toLowerCase();
