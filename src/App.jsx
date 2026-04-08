@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './Components/Navbar/Navbar';
 import Collections from './Components/Collections/Collections';
 import NewArrivals from './Components/NewArrivals/NewArrivals';
@@ -13,11 +13,11 @@ import AdminPanel from './Components/Admin/AdminPanel';
 import { SearchProvider } from './contexts/SearchContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-function ScrollToHash() {
+function ScrollToSection() {
   const location = useLocation();
   useEffect(() => {
-    if (location.pathname === '/' && location.hash) {
-      const id = location.hash.replace('#', '');
+    const id = location.state?.scrollTo;
+    if (id) {
       setTimeout(() => {
         const el = document.getElementById(id);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -39,7 +39,7 @@ function ProtectedRoute({ children }) {
 
 const AppRoutes = () => (
   <>
-    <ScrollToHash />
+    <ScrollToSection />
     <Routes>
       <Route path="/" element={
         <>
@@ -71,7 +71,7 @@ const AppRoutes = () => (
 const App = () => (
   <AuthProvider>
     <SearchProvider>
-      <Router basename="/muruganTexBlouse">
+      <Router>
         <AppRoutes />
       </Router>
     </SearchProvider>

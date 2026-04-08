@@ -15,11 +15,11 @@ const BLOUSE_SUGGESTIONS = [
 ];
 
 const NAV_LINKS = [
-  { label: 'Style Buzz',   to: '/#collections'  },
-  { label: 'New Arrivals', to: '/#new-arrivals'  },
-  { label: 'Shop All',     to: '/blouses/all'    },
-  { label: 'About Us',     to: '/#about-us'      },
-  { label: 'Contact',      to: '/#contact-us'    },
+  { label: 'Style Buzz',   to: '/', scrollTo: 'collections'  },
+  { label: 'New Arrivals', to: '/', scrollTo: 'new-arrivals'  },
+  { label: 'Shop All',     to: '/blouses/all'                  },
+  { label: 'About Us',     to: '/', scrollTo: 'about-us'      },
+  { label: 'Contact',      to: '/', scrollTo: 'contact-us'    },
 ];
 
 const Navbar = () => {
@@ -165,9 +165,9 @@ const Navbar = () => {
           </button>
 
           <ul className="nav-links desktop-only">
-            {NAV_LINKS.slice(0, 3).map(({ label, to }) => (
-              <li key={to}>
-                <Link to={to} className={`nav-link ${isActive(to) ? 'active' : ''}`}>{label}</Link>
+            {NAV_LINKS.slice(0, 3).map(({ label, to, scrollTo }) => (
+              <li key={label}>
+                <Link to={to} state={scrollTo ? { scrollTo } : undefined} className={`nav-link ${isActive(to) ? 'active' : ''}`}>{label}</Link>
               </li>
             ))}
           </ul>
@@ -195,7 +195,7 @@ const Navbar = () => {
               </a>
             </li>
             <li>
-              <Link to="/#contact-us" className="nav-link nav-cta-btn">Enquire Now</Link>
+              <Link to="/" state={{ scrollTo: 'contact-us' }} className="nav-link nav-cta-btn">Enquire Now</Link>
             </li>
           </ul>
 
@@ -238,10 +238,11 @@ const Navbar = () => {
         <div className="drawer-tagline">Temple of Blouse</div>
 
         <nav className="drawer-nav">
-          {NAV_LINKS.map(({ label, to }) => (
+          {NAV_LINKS.map(({ label, to, scrollTo }) => (
             <Link
-              key={to}
+              key={label}
               to={to}
+              state={scrollTo ? { scrollTo } : undefined}
               className={`drawer-link ${isActive(to) ? 'active' : ''}`}
               onClick={() => setDrawerOpen(false)}
             >
