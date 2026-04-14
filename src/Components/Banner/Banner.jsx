@@ -23,7 +23,7 @@ const Banner = () => (
 
         <div className="hero-stats">
           <div className="hero-stat">
-            <span className="stat-num">20+</span>
+            <span className="stat-num">30+</span>
             <span className="stat-label">Years of craft</span>
           </div>
           <div className="stat-sep" />
@@ -33,7 +33,7 @@ const Banner = () => (
           </div>
           <div className="stat-sep" />
           <div className="hero-stat">
-            <span className="stat-num">10K+</span>
+            <span className="stat-num">10M+</span>
             <span className="stat-label">Happy customers</span>
           </div>
         </div>
