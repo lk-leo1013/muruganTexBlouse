@@ -1,7 +1,7 @@
 import { useContext, useMemo, useState, useEffect } from 'react';
 import './ViewAllBlouses.css';
 import { SearchContext } from '../../contexts/SearchContext';
-import { fetchBlouses } from '../../lib/db';
+import { fetchBlouses, incrementClickCount } from '../../lib/db';
 
 // Transform a raw Supabase row into the shape the UI expects
 function transformBlouse(row) {
@@ -74,6 +74,18 @@ const ViewAllBlouses = () => {
     };
     loadBlouses();
   }, []);
+
+  // Top 30 blouses by contactClicks (min 1 click) are auto-tagged BESTSELLER
+  const bestsellerIds = useMemo(() => {
+    const sorted = [...blouses]
+      .filter(b => (b.contactClicks || 0) > 0)
+      .sort((a, b) => (b.contactClicks || 0) - (a.contactClicks || 0))
+      .slice(0, 30);
+    return new Set(sorted.map(b => b.id));
+  }, [blouses]);
+
+  const effectiveBadge = (b) =>
+    bestsellerIds.has(b.id) ? 'BESTSELLER' : (b.badge || null);
 
   // Build colorMap dynamically from fetched blouses
   const colorMap = useMemo(() => {
@@ -273,9 +285,9 @@ const ViewAllBlouses = () => {
                 >
                   <div className="product-image-wrap">
                     <img src={cardImg} alt={b.name} className="product-image" />
-                    {b.badge && (
-                      <span className={`product-badge ${b.badge === 'BESTSELLER' ? 'badge-bestseller' : 'badge-new'}`}>
-                        {b.badge}
+                    {effectiveBadge(b) && (
+                      <span className={`product-badge ${effectiveBadge(b) === 'BESTSELLER' ? 'badge-bestseller' : 'badge-new'}`}>
+                        {effectiveBadge(b)}
                       </span>
                     )}
                   </div>
@@ -370,9 +382,9 @@ const ViewAllBlouses = () => {
                   )}
                 </div>
                 <div className="pd-details">
-                  {modalProduct.badge && (
-                    <span className={`pd-badge ${modalProduct.badge === 'BESTSELLER' ? 'badge-bestseller' : 'badge-new'}`}>
-                      {modalProduct.badge}
+                  {effectiveBadge(modalProduct) && (
+                    <span className={`pd-badge ${effectiveBadge(modalProduct) === 'BESTSELLER' ? 'badge-bestseller' : 'badge-new'}`}>
+                      {effectiveBadge(modalProduct)}
                     </span>
                   )}
                   <h2 className="pd-name">{modalProduct.name}</h2>
@@ -425,7 +437,7 @@ const ViewAllBlouses = () => {
                         `\nProduct link: ${window.location.href}`
                       )}`}
                       target="_blank" rel="noopener noreferrer" className="pd-cta-btn"
-                      onClick={e => e.stopPropagation()}>
+                      onClick={e => { e.stopPropagation(); incrementClickCount(modalProduct.id); }}>
                       Contact to Order
                     </a>
                   </div>
