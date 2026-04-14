@@ -8,7 +8,7 @@ const FABRIC_OPTIONS = [
   'Chiffon', 'Linen', 'Other',
 ];
 
-const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL'];
+const SIZE_OPTIONS = ['One Size', 'S', 'M', 'L', 'XL', 'XXL'];
 
 const defaultColor = () => ({ name: '', hex: '#8b1a1a', images: [], urlInput: '' });
 
@@ -23,6 +23,15 @@ const defaultForm = {
   wash_care: 'Dry clean only',
   colors: [defaultColor()],
 };
+
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsDataURL(file);
+  });
+}
 
 const BlouseForm = ({ blouse, onClose }) => {
   const isEdit = !!blouse;
@@ -70,6 +79,25 @@ const BlouseForm = ({ blouse, onClose }) => {
       colors: f.colors.map((c, i) => i === idx ? { ...c, [key]: val } : c),
     }));
 
+  // Convert uploaded file to base64 and add to images
+  const handleFilePick = async (idx, files) => {
+    if (!files || files.length === 0) return;
+    setError('');
+    try {
+      const dataUrls = await Promise.all(
+        Array.from(files).map(file => readFileAsDataURL(file))
+      );
+      setForm(f => ({
+        ...f,
+        colors: f.colors.map((c, i) =>
+          i === idx ? { ...c, images: [...c.images, ...dataUrls] } : c
+        ),
+      }));
+    } catch {
+      setError('Failed to read one or more image files.');
+    }
+  };
+
   const addImageUrl = (idx) => {
     const url = form.colors[idx].urlInput.trim();
     if (!url) return;
@@ -91,6 +119,8 @@ const BlouseForm = ({ blouse, onClose }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (!form.name.trim() || !form.fabric.trim()) {
       setError('Name and fabric are required.');
       return;
@@ -99,13 +129,18 @@ const BlouseForm = ({ blouse, onClose }) => {
       setError('Add at least one colour.');
       return;
     }
-    if (form.colors.some(c => !c.name.trim())) {
-      setError('All colours must have a name.');
-      return;
+    for (let i = 0; i < form.colors.length; i++) {
+      if (!form.colors[i].name.trim()) {
+        setError(`Colour ${i + 1} must have a name.`);
+        return;
+      }
+      if (form.colors[i].images.length === 0) {
+        setError(`Colour ${i + 1} (${form.colors[i].name || 'unnamed'}) must have at least one image.`);
+        return;
+      }
     }
 
     setSaving(true);
-    setError('');
 
     const payload = {
       name: form.name.trim(),
@@ -143,6 +178,7 @@ const BlouseForm = ({ blouse, onClose }) => {
         </div>
 
         <form className="bf-body" onSubmit={handleSave}>
+          {/* Name + Fabric */}
           <div className="bf-row two">
             <div className="bf-group">
               <label className="bf-label">Blouse Name *</label>
@@ -160,6 +196,7 @@ const BlouseForm = ({ blouse, onClose }) => {
             </div>
           </div>
 
+          {/* Description */}
           <div className="bf-group">
             <label className="bf-label">Description</label>
             <textarea className="bf-input bf-textarea" value={form.description}
@@ -167,6 +204,7 @@ const BlouseForm = ({ blouse, onClose }) => {
               rows={3} placeholder="Describe the blouse…" />
           </div>
 
+          {/* Badge + Rating + Reviews */}
           <div className="bf-row three">
             <div className="bf-group">
               <label className="bf-label">Badge</label>
@@ -188,6 +226,7 @@ const BlouseForm = ({ blouse, onClose }) => {
             </div>
           </div>
 
+          {/* Sizes + Wash Care */}
           <div className="bf-row two">
             <div className="bf-group">
               <label className="bf-label">Available Sizes</label>
@@ -212,7 +251,7 @@ const BlouseForm = ({ blouse, onClose }) => {
           {/* Colours */}
           <div className="bf-colors-section">
             <div className="bf-colors-hdr">
-              <span className="bf-label">Colours &amp; Images</span>
+              <span className="bf-label">Colours &amp; Images <span className="bf-required">*</span></span>
               <button type="button" className="bf-add-color-btn" onClick={addColor}>
                 + Add Colour
               </button>
@@ -252,24 +291,35 @@ const BlouseForm = ({ blouse, onClose }) => {
                   </div>
                 </div>
 
+                {/* Images — required */}
                 <div className="bf-group">
                   <label className="bf-label">
-                    Image URLs
-                    <span className="bf-label-hint"> (paste a URL and click Add)</span>
+                    Images <span className="bf-required">*</span>
+                    <span className="bf-label-hint"> (at least one required per colour)</span>
                   </label>
 
-                  {/* Existing images */}
-                  {color.images.length > 0 && (
-                    <div className="bf-images-row">
-                      {color.images.map((url, imgIdx) => (
-                        <div key={imgIdx} className="bf-img-thumb">
-                          <img src={url} alt="" onError={e => { e.target.style.display = 'none'; }} />
-                          <button type="button" className="bf-img-remove"
-                            onClick={() => removeImage(idx, imgIdx)} aria-label="Remove">✕</button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <div className="bf-images-row">
+                    {color.images.map((src, imgIdx) => (
+                      <div key={imgIdx} className="bf-img-thumb">
+                        <img src={src} alt="" onError={e => { e.target.style.display = 'none'; }} />
+                        <button type="button" className="bf-img-remove"
+                          onClick={() => removeImage(idx, imgIdx)} aria-label="Remove">✕</button>
+                      </div>
+                    ))}
+
+                    {/* Browse from computer */}
+                    <label className="bf-upload-tile" title="Browse from computer">
+                      <span className="bf-upload-icon">📁</span>
+                      <span>Browse</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        hidden
+                        onChange={e => handleFilePick(idx, e.target.files)}
+                      />
+                    </label>
+                  </div>
 
                   {/* URL input */}
                   <div className="bf-url-row">
@@ -277,11 +327,11 @@ const BlouseForm = ({ blouse, onClose }) => {
                       className="bf-input"
                       value={color.urlInput}
                       onChange={e => setColorField(idx, 'urlInput', e.target.value)}
-                      placeholder="https://example.com/image.jpg"
+                      placeholder="Or paste an image URL…"
                       onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addImageUrl(idx))}
                     />
                     <button type="button" className="bf-url-add-btn" onClick={() => addImageUrl(idx)}>
-                      Add
+                      Add URL
                     </button>
                   </div>
                 </div>
